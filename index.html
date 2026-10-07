@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mimisal To Coimbatore</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.30.0/mapbox-gl.css" rel="stylesheet">
+</head>
+
+<body>   
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 952px;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div id="map"></div>
+        <script>
+            let stops = [
+                [79.1404009, 9.9221841],
+                [78.9927909, 10.1686451],
+                [78.8191259, 10.3826515],
+                [78.7047, 10.7905],
+                [78.0807797, 10.9596041],
+                [77.2835582, 10.9962313],
+                [77.1258565, 11.0268912],
+                [77.0234948, 11.0028585]
+            ];
+            function showMarkers() {
+                mapboxgl.accessToken = 'pk.eyJ1Ijoic2VudGhpbGt1cHB1c3dhbXkiLCJhIjoiY2twbTlkMzBlMDQxYjJ2bXcwcG5xdnhzNCJ9.mmPcPQN_3raRRh8Q0S1kEw';
+                const map = new mapboxgl.Map({
+                    container: 'map',
+                    style: 'mapbox://styles/mapbox/satellite-streets-v12',
+                    center: stops[0], // start at Mimisal
+                    zoom: 4,
+                });
+
+                map.on('load', () => {
+                    map.flyTo({
+                        center: stops[0],
+                        zoom: 11,
+                        speed: 1.2,
+                        curve: 1.5
+                    });
+                });
+
+                // Create one marker at the first stop
+                const marker = new mapboxgl.Marker({
+                    color: "red"
+                })
+                    .setLngLat(stops[0])
+                    .addTo(map);
+
+                let i = 0;
+                // Move marker from one stop to the next
+                function moveMarker() {
+                    if (i < stops.length - 1) {
+                        i++;
+                        marker.setLngLat(stops[i]);
+                        // Move the map view to the new stop
+                        map.flyTo({
+                            center: stops[i],
+                            zoom: 13
+                        });
+                        setTimeout(moveMarker, 2500);
+                    }
+                }
+                // Start moving after 1.5 seconds
+                setTimeout(moveMarker, 2500);
+            }
+            window.onload = showMarkers;
+
+
+        </script>
+        <script src="https://api.mapbox.com/mapbox-gl-js/v3.15.0/mapbox-gl.js"></script>;
+    </body>
+
+</html>
